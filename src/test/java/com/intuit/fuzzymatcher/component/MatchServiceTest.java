@@ -2,6 +2,7 @@ package com.intuit.fuzzymatcher.component;
 
 import com.intuit.fuzzymatcher.domain.Document;
 import com.intuit.fuzzymatcher.domain.Element;
+import com.intuit.fuzzymatcher.domain.ElementType;
 import com.intuit.fuzzymatcher.domain.Match;
 import com.intuit.fuzzymatcher.function.PreProcessFunction;
 import com.opencsv.CSVReader;
@@ -21,6 +22,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -571,5 +573,34 @@ public class MatchServiceTest {
                     .setThreshold(docThreshold)
                     .createDocument();
         }).collect(Collectors.toList());
+    }
+
+    @Test
+    public void isShouldApplyExactMatch() {
+        // Build document input
+        List<Document> documents = new ArrayList<>();
+        List<String> transactions = Arrays.asList("Immediate Payment Fee", "Immediate Payment Fee", "Immediate Payment Fee", "Immediate Payment Fee");
+        AtomicInteger index = new AtomicInteger(0);
+        transactions.stream().forEach(t -> {
+
+            documents.add(new Document.Builder(String.valueOf(index.incrementAndGet()))
+                    .addElement(new Element.Builder().setType(ElementType.TEXT).setValue(t).createElement())
+                    .createDocument());
+        });
+
+        MatchService matchService = new MatchService();
+        Map<Document, List<Match<Document>>> matched = matchService.applyMatch(documents);
+
+        for (Iterator<Document> i = matched.keySet().iterator(); i.hasNext(); ) {
+
+            Document d = i.next();
+            System.out.println("");
+            System.out.println(d.toString());
+            matched.get(d).stream().forEach(doc -> {
+
+                System.out.println("Matching " + doc.toString());
+            });
+
+        }
     }
 }
