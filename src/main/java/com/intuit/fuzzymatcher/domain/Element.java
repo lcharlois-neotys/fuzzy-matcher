@@ -3,10 +3,7 @@ package com.intuit.fuzzymatcher.domain;
 import com.intuit.fuzzymatcher.function.ScoringFunction;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.AbstractMap;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -60,7 +57,7 @@ public class Element implements Matchable {
         this.preProcessFunction = preProcessFunction == null ? type.getPreProcessFunction() : preProcessFunction;
         this.tokenizerFunction = tokenizerFunction == null ? type.getTokenizerFunction() : tokenizerFunction;
         this.similarityMatchFunction = similarityMatchFunction == null ? type.getSimilarityMatchFunction() : similarityMatchFunction;
-        this.scoringFunction = scoringFunction != null ? this.scoringFunction : DEFAULT_ELEMENT_SCORING;
+        this.scoringFunction = Optional.ofNullable(scoringFunction).orElse(DEFAULT_ELEMENT_SCORING);
     }
 
     public ElementClassification getElementClassification() {
@@ -152,7 +149,12 @@ public class Element implements Matchable {
         return 0;
     }
 
-    @Override
+	@Override
+	public int getSize() {
+		return Optional.ofNullable(tokens).map(Collection::size).orElse(0);
+	}
+
+	@Override
     public BiFunction<Match, List<Score>, Score> getScoringFunction() {
         return this.scoringFunction;
     }

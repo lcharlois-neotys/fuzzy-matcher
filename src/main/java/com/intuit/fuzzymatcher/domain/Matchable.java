@@ -16,4 +16,7 @@ public interface Matchable {
     public double getWeight();
 
     public long getUnmatchedChildCount(Matchable other);
+
+    int getSize();
+
 }

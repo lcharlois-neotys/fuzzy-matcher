@@ -5,10 +5,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -111,7 +108,12 @@ public class Document implements Matchable {
         return 0;
     }
 
-    @Override
+	@Override
+	public int getSize() {
+		return Optional.ofNullable(elements).map(Collection::size).orElse(0);
+	}
+
+	@Override
     public BiFunction<Match, List<Score>, Score> getScoringFunction() {
         return this.scoringFunction != null ? this.scoringFunction : DEFAULT_DOCUMENT_SCORING;
     }

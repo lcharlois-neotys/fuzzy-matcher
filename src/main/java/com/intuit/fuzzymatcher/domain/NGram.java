@@ -1,5 +1,10 @@
 package com.intuit.fuzzymatcher.domain;
 
+import org.apache.lucene.analysis.TokenStream;
+
+import java.util.Collection;
+import java.util.Optional;
+
 /**
  *
  * This class is used for optimization.
@@ -23,7 +28,7 @@ public class NGram extends Token {
         this.token = token;
     }
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

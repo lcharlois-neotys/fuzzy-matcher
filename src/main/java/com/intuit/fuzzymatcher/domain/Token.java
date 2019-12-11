@@ -3,7 +3,9 @@ package com.intuit.fuzzymatcher.domain;
 import com.intuit.fuzzymatcher.function.ScoringFunction;
 import com.intuit.fuzzymatcher.util.Utils;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -79,7 +81,12 @@ public class Token implements Matchable {
         return 1.0;
     }
 
-    @Override
+	@Override
+	public int getSize() {
+		return Optional.ofNullable(value).map(Object::toString).map(String::length).orElse(0);
+	}
+
+	@Override
     public String toString() {
         return "{" +
                 value + '\'' +
